@@ -9,6 +9,7 @@ import json
 import socket
 import sys
 
+# TODO: domain name of remote server
 LOCAL_HOST = 'localhost'
 LOCAL_PORT = 10001
 
