@@ -9,7 +9,7 @@ import json
 import socket
 import sys
 
-LOCAL_HOST = 'se329server-pi.local'
+LOCAL_HOST = 'localhost'
 LOCAL_PORT = 10001
 
 tcp_data = {}
