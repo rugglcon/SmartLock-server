@@ -18,7 +18,7 @@ import sys
 
 TCP_HOST = 'localhost'
 TCP_PORT = 10000
-REMOTE_HOST = 'se329server-pi.local'
+REMOTE_HOST = 'localhost'
 REMOTE_PORT = 10001
 
 syn_data = {
