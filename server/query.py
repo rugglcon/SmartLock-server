@@ -43,13 +43,13 @@ def insert(table, columns, values):
 
     try:
         cursor.execute(query)
-    except mysql.connector.Error as err:
+    except mysql.connector.Error:
         return False
     finally:
         return True
 
 
-def query(query):
+def gen_query(query_string):
     """
     general query function for unique queries
     returns False on Error, otherwise returns
@@ -57,8 +57,8 @@ def query(query):
     """
     cursor = CONN.cursor(buffered=True, dictionary=True)
     try:
-        cursor.execute(query)
-    except mysql.connector.Error as err:
+        cursor.execute(query_string)
+    except mysql.connector.Error:
         return False
     finally:
         return cursor
