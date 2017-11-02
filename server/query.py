@@ -45,8 +45,7 @@ def insert(table, columns, values):
         cursor.execute(query)
     except mysql.connector.Error:
         return False
-    finally:
-        return True
+    return True
 
 
 def gen_query(query_string):
