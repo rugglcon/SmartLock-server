@@ -79,12 +79,11 @@ try:
         amount_received = 0
         amount_expected = len(message)
 
-        while amount_received < amount_expected:
+        while amount_received != amount_expected:
             data = sock.recv(16)
             amount_received += len(data)
             print('Received %s bytes from %s. data: %s'
                   % (len(data), server_address, data))
-            break
 
 finally:
     sock.close()
