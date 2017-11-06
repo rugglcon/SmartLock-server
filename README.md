@@ -1,2 +1,3 @@
-# SmartLock-server
+# Smart Lock
+
 Secure, automated locking system controllable with a mobile app.
