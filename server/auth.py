@@ -9,10 +9,12 @@ CONN = query.Query("pi", "329db", "localhost", "smart_lock")
 
 def authenticate(user, passwd):
     """
-    selects a row that matches the given email and password
+    selects a row that matches the given email and password,
+    then returns the id if successfully authenticated. otherwise
+    returns False
     """
-    curs = CONN.select("*", "Users",
-                       "email = {} and password = {}".format(user, passwd))
+    curs = CONN.select("id", "Users",
+                       "email = '{}' and password = '{}'".format(user, passwd))
     if curs.rowcount == 0:
         return False
-    return True
+    return curs.fetchone()["id"]
