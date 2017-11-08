@@ -35,7 +35,7 @@ class Query:
         cursor.execute(selection)
         return cursor
 
-    def insert(self, table, columns, values):
+    def insert(self, table, columns, values, where=""):
         """
         inserts data into a given table
         returns True for success, False on Error
@@ -48,6 +48,8 @@ class Query:
         query = "INSERT INTO {} ({}) VALUES ({})".format(
             table, columns, values)
 
+        if where != "":
+            query += " WHERE {}".format(where)
         try:
             cursor.execute(query)
         except mysql.connector.Error:
