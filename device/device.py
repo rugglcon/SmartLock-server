@@ -16,10 +16,11 @@ import json
 import socket
 import sys
 
-TCP_HOST = 'localhost'
+# TODO: determine private IP automatically
+TCP_HOST = '10.0.2.15'
 TCP_PORT = 10000
 # TODO: domain name of remote server
-REMOTE_HOST = 'localhost'
+REMOTE_HOST = '192.168.1.17'
 REMOTE_PORT = 10001
 
 syn_data = {
@@ -32,19 +33,19 @@ syn_data = {
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # address of the remote server
-server_address = (REMOTE_HOST, REMOTE_PORT)
+remote_server_address = (REMOTE_HOST, REMOTE_PORT)
 
 try:
 
     # send initial UDP packet to remote server and wait for response
-    print('Sending UDP packet to host: %s, port: %s' % server_address)
-    sock.sendto(json.dumps(syn_data), server_address)
+    print('Sending UDP packet to host: %s, port: %s' % remote_server_address)
+    sock.sendto(json.dumps(syn_data), remote_server_address)
     print('Waiting for response...')
 
     while True:
 
         data, address = sock.recvfrom(1046)
-        print('Received %s bytes from %s. data: %s' \
+        print('Received %s bytes from %s. data: %s'
               % (len(data), address, data))
 
         if data:
@@ -61,12 +62,14 @@ try:
             syn_data['send-syn'] = True
             # send UDP packet to initiate TCP connection
             print('Initiate TCP connection with host: %s, port: %s'
-                  % server_address)
+                  % remote_server_address)
             # negotiate TCP socket port; bind to port on which the future TCP
             # connection will be established
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.bind((TCP_HOST, TCP_PORT))
-            sock.sendto(json.dumps(syn_data), server_address)
+            print('UDP hole punching on host: %s, port: %s'
+                  % (TCP_HOST, TCP_PORT))
+            sock.sendto(json.dumps(syn_data), remote_server_address)
             break
 
 finally:
@@ -75,7 +78,7 @@ finally:
 # create a TCP/IP socket; IPv4, TCP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# bind the socket to a port
+# address of the local server
 server_address = (TCP_HOST, TCP_PORT)
 print('Starting server on host: %s, port: %s' % server_address)
 

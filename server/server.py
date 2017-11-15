@@ -9,8 +9,9 @@ import json
 import socket
 import sys
 
+# TODO: need gateway IP, not IP of device
 # TODO: domain name of remote server
-LOCAL_HOST = 'localhost'
+LOCAL_HOST = '192.168.1.17'
 LOCAL_PORT = 10001
 
 tcp_data = {}
@@ -51,7 +52,7 @@ try:
         sock.sendto(json.dumps({'should-respond': True}), address)
 
         if data.get('send-syn', None) is True:
-            print('Establishing TCP connection with device on'
+            print('Establishing TCP connection with device on '
                   'host: %s, port: %s' % address)
             tcp_data = data
             break
@@ -62,10 +63,10 @@ finally:
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # bind the socket to a port
-server_address = (tcp_data['tcp-host'], tcp_data['tcp-port'])
+local_server_address = ('192.168.1.17', 10000)
 
-print('Connection to device on host: %s, port: %s' % server_address)
-sock.connect(server_address)
+print('Connecting to device on host: %s, port: %s' % local_server_address)
+sock.connect(local_server_address)
 
 try:
 
