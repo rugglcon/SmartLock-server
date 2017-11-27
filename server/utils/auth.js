@@ -39,7 +39,7 @@ module.exports.use_lock = function(user_id, lock_id, oper, callback) {
             if(err) {
               return callback(err, "Error: " + data);
             } else {
-              callback(0, data);
+              return callback(0, data);
             }
           });
         } else {
@@ -84,11 +84,11 @@ module.exports.create_account = function(email, passwd, callback) {
           if(err) {
             return callback(err, "Error: " + data);
           } else {
-            login(email, passwd, function(err, data) {
+            module.exports.login(email, passwd, function(err, data) {
               if(err) {
                 return callback(err, "Error: " + data);
               } else {
-                callback(0, data);
+                return callback(0, data);
               }
             });
           }
