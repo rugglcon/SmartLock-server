@@ -1,5 +1,3 @@
-import { createUnzip } from 'zlib';
-
 var query = require('./query.js');
 
 function Auth() {
@@ -7,11 +5,11 @@ function Auth() {
 		query.query("select id from Users where email = '" + email + "' and password = '" + passwd + "'", function(err, data) {
 				if(!err) {
 					if(data.length == 0) {
-						callback(2, "No user with that email or password");
+						return callback(2, "No user with that email or password");
 					}
 					callback(0, data[0].id);
 				} else {
-					callback(err, "Error: " + data);
+					return callback(err, "Error: " + data);
 				}
 			});
 	};
@@ -20,24 +18,24 @@ function Auth() {
 		query.query("select lock_id from Perms where user_id = '" + user_id + "' and lock_id = '" + lock_id + "'", function(err, data) {
 			if(!err) {
 				if(data.length == 0) {
-					callback(2, "User " + user_id + " doesn't have permissions for lock " + lock_id);
+					return callback(2, "User " + user_id + " doesn't have permissions for lock " + lock_id);
 				}
 				query.query("insert into Ops (user_id, lock_id, time, op) values ('" + user_id + "', '" + lock_id + "', '" + Date.now() + "', '" + oper + "'",
 				function(err, data) {
 					if(!err) {
 						query.query("insert into Locks columns (state) values ('" + oper + "') where id = '" + lock_id + "'", function(err, data) {
 							if(err) {
-								callback(err, "Error: " + data);
+								return callback(err, "Error: " + data);
 							} else {
 								callback(0, data);
 							}
 						});
 					} else {
-						callback(err, "Error: " + data);
+						return callback(err, "Error: " + data);
 					}
 				});
 			} else {
-				callback(err, "Error: " + data);
+				return callback(err, "Error: " + data);
 			}
 		});
 	};
@@ -46,21 +44,21 @@ function Auth() {
 		query.query("select * from Locks where id = '" + lock_id + "' and owner_id = '" + owner_id + "'", function(err, data) {
 			if(!err) {
 				if(data.length == 0) {
-					callback(2, "Wrong owner for lock " + lock_id);
+					return callback(2, "Wrong owner for lock " + lock_id);
 				}
 				query.query("select * from Perms where lock_id = '" + lock_id + "' and user_id = '" + user_id + "'", function(err, data) {
 					if(!err) {
 						if(data.length == 0) {
 							query.query("insert into Perms columns (lock_id, user_id) values ('" + lock_id + "', '" + user_id + "')", function(err, data) {
 								if(err) {
-									callback(err, "Error: " + data);
+									return callback(err, "Error: " + data);
 								}
 							});
 						}
 					}
 				});
 			} else {
-				callback(err, "Error: " + data);
+				return callback(err, "Error: " + data);
 			}
 		});
 	};
@@ -72,11 +70,11 @@ function Auth() {
 				if(data.length == 0) {
 					query.query("insert into Users columns (email, password) values ('" + email + "', '" + passwd + "')", function(err, data) {
 						if(err) {
-							callback(err, "Error: " + data);
+							return callback(err, "Error: " + data);
 						} else {
 							this.login(email, passwd, function(err, data) {
 								if(err) {
-									callback(err, "Error: " + data);
+									return callback(err, "Error: " + data);
 								} else {
 									callback(0, data);
 								}
@@ -84,7 +82,7 @@ function Auth() {
 						}
 					});
 				} else {
-					callback(2, "User already exists with email " + email);
+					return callback(2, "User already exists with email " + email);
 				}
 			}
 		});
