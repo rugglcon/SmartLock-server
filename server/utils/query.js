@@ -12,8 +12,8 @@ function Query() {
   });
   this.connection.connect();
 
-  this.query = function(dbq, callback) {
-    this.connection.query(dbq, function(err, rows, fields, dbq) {
+  this.query = function(qs, callback) {
+    this.connection.query(qs, function(err, rows, fields, dbq) {
       if(!err) {
         callback(0, rows);
       } else {
