@@ -99,3 +99,14 @@ module.exports.create_account = function(email, passwd, callback) {
     }
   });
 };
+
+module.exports.get_inside = function(callback) {
+  query.query("select count(inside) as count from Users where inside = 1",
+    function(err, data) {
+      if(err) {
+        return callback(err, "Error: " + data);
+      } else {
+        callback(0, data[0].count);
+      }
+  });
+};

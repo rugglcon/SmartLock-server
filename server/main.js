@@ -87,6 +87,12 @@ app.get('/add_user_to_lock', function(req, res) {
   });
 });
 
+app.get('/num_inside_users', function(req, res) {
+  auth.get_inside(function(err, data) {
+    handle_res(res, err, data);
+  });
+});
+
 app.listen(8080, '0.0.0.0', function() {
   console.log('listening on port 8080');
 });
