@@ -61,11 +61,15 @@ module.exports.add_user_to_lock = function(owner_id, user_id, lock_id, callback)
       query.query("select * from Perms where lock_id = '" + lock_id + "' and user_id = '" + user_id + "'", function(err, data) {
         if(!err) {
           if(data.length == 0) {
-            query.query("insert into Perms (lock_id, user_id) values ('" + lock_id + "', '" + user_id + "')", function(err, data) {
+            query.query("insert into Perms (lock_id, user_id) values (" + lock_id + ", " + user_id + ")", function(err, data) {
               if(err) {
                 return callback(err, "Error: " + data);
+              } else {
+                return callback(0, "Successfully added user to lock.");
               }
             });
+          } else {
+            return callback(2, "User already has permissions for this lock.");
           }
         }
       });
