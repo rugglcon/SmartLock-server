@@ -10,20 +10,24 @@ module.exports.login = function (email, passwd, callback) {
         var usr_data = {};
         query.query("select lock_id from Perms where user_id = " + data[0].id,
           function(err, data) {
-            var usr_locks = [];
-            for(var i = 0; i < data.length; i++) {
-              usr_locks[i] = {'lock_id': data[i].lock_id};
+            if(!err) {
+              var usr_lock = -1;
+              if(data.length > 0) {
+                usr_lock = data[0].lock_id;
+              }
+              usr_data = {
+                "user_id": usr_id,
+                "lock_id": usr_lock
+              };
+              callback(0, usr_data);
+            } else {
+              return callback(err, "Error: " + data);
             }
-            usr_data = {
-              "user_id": usr_id,
-              "locks": usr_locks
-            };
-            callback(0, usr_data);
           });
       } else {
         return callback(err, "Error: " + data);
       }
-    });
+  });
 };
 
 module.exports.use_lock = function(user_id, lock_id, oper, callback) {
@@ -104,13 +108,19 @@ module.exports.create_account = function(email, passwd, callback) {
   });
 };
 
-module.exports.get_inside = function(callback) {
-  query.query("select count(inside) as count from Users where inside = 1",
-    function(err, data) {
-      if(err) {
-        return callback(err, "Error: " + data);
-      } else {
-        callback(0, data[0].count);
-      }
+module.exports.get_inside = function(user_id, callback) {
+  query.query("select * from Users where id = " + user_id, function(err, data) {
+    if(err) {
+      return callback(2, "User with id " + user_id + " does not exist.");
+    } else {
+      query.query("select count(inside) as count from Users where inside = 1",
+      function(err, data) {
+        if(err) {
+          return callback(err, "Error: " + data);
+        } else {
+          callback(0, data[0].count);
+        }
+      });
+    }
   });
 };
