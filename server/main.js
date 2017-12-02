@@ -26,7 +26,7 @@ app.get('/open_lock', function(req, res) {
             var lock_ip = data[0].IP;
             request.get('http://0.0.0.0:8000' + '/open_lock',
               function(error, resp, body) {
-                handle_res(res, error, body);
+                handle_res(res, error, JSON.parse(body).data);
             });
           }
       });
@@ -48,7 +48,7 @@ app.get('/close_lock', function(req, res) {
               var lock_ip = data[0].IP;
               request.get('http://0.0.0.0:8000' + '/close_lock',
                 function(error, resp, body) {
-                  handle_res(res, error, body);
+                  handle_res(res, error, JSON.parse(body).data);
               });
             }
         });
